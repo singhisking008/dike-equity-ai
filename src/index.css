@@ -1,12 +1,184 @@
+/**
+ * @fileoverview DIKE AI Global Styles
+ * 
+ * Global CSS styles for the DIKE AI Educational Equity Analyzer.
+ * This file defines the design system, component styles, and responsive utilities.
+ * 
+ * Features:
+ * - Tailwind CSS integration
+ * - Custom glass morphism effects
+ * - Gradient text utilities
+ * - Component-specific styling
+ * - Print media queries
+ * - Animation utilities
+ * 
+ * @author Utkarsh Priyadarshi
+ * @version 1.0.0
+ * @since 2025
+ * @license MIT
+ */
+
+/* Google Fonts - Inter for clean, modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Tailwind CSS base imports */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base layer styles - fundamental element styling */
 @layer base {
   body {
-    @apply bg-[#0a0a0f] min-h-screen;
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    @apply bg-slate-900 min-h-screen;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
+}
+
+/* Component layer styles - reusable UI components */
+@layer components {
+  /* Glass morphism card effect */
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl;
+  }
+  
+  /* Glass card hover state */
+  .glass-card-hover {
+    @apply hover:bg-white/15 hover:border-white/30 hover:shadow-white/10 transition-all duration-300;
+  }
+  
+  /* Gradient text effects */
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-accent {
+    @apply bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent;
+  }
+  
+  /* Primary button styling */
+  .button-primary {
+    @apply bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200;
+  }
+  
+  /* Input field styling */
+  .input-field {
+    @apply bg-white/10 border border-white/20 text-white placeholder-white/50 rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:bg-white/15 transition-all duration-200;
+  }
+  
+  /* Text color utilities */
+  .text-primary {
+    @apply text-white;
+  }
+  
+  .text-secondary {
+    @apply text-blue-200;
+  }
+  
+  .text-muted {
+    @apply text-blue-300/70;
+  }
+}
+
+@layer utilities {
+  .print-only {
+    display: none;
+  }
+  
+  @media print {
+    /* Hide website elements */
+    .no-print,
+    header,
+    footer,
+    button,
+    .fixed,
+    .sticky {
+      display: none !important;
+    }
+    
+    .print-only {
+      display: block !important;
+    }
+    
+    /* Reset page styles */
+    body {
+      @apply bg-white;
+      margin: 0;
+      padding: 20px;
+      color: #000;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    
+    main {
+      max-width: 100% !important;
+      padding: 0 !important;
+    }
+    
+    /* Clean backgrounds */
+    * {
+      background: white !important;
+      border-color: #333 !important;
+      color: #000 !important;
+    }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+  to { box-shadow: 0 0 30px rgba(34, 211, 238, 0.5); }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(34, 211, 238, 0.3);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @layer utilities {

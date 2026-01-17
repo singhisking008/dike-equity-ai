@@ -1,9 +1,0 @@
-.env
-.env.local
-.env.production
-.git
-.vscode
-node_modules
-server.js
-*.log
-.DS_Store
