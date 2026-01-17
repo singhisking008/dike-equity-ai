@@ -1,3 +1,6 @@
+/* Google Fonts - Inter for clean, modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 /**
  * @fileoverview DIKE AI Global Styles
  * 
@@ -17,9 +20,6 @@
  * @since 2025
  * @license MIT
  */
-
-/* Google Fonts - Inter for clean, modern typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Tailwind CSS base imports */
 @tailwind base;
