@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node build.js",
+    "build": "node build-simple.js",
     "preview": "vite preview"
   },
   "keywords": [
