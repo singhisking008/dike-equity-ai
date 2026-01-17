@@ -1,3 +1,4 @@
+
 {
   "name": "dike-ai",
   "version": "1.0.0",
@@ -36,15 +37,15 @@
   "author": {
     "name": "Utkarsh Priyadarshi",
     "email": "contact@dike-ai.com",
-    "url": "https://github.com/your-username"
+    "url": "https://github.com/singhisking008"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/dike-equity-ai.git"
+    "url": "https://github.com/singhisking008/dike-equity-ai.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/dike-equity-ai/issues"
+    "url": "https://github.com/singhisking008/dike-equity-ai/issues"
   },
   "homepage": "https://your-app.vercel.app",
   "dependencies": {
