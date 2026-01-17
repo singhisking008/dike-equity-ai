@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "node build-simple.js",
+    "build": "node build.js",
     "preview": "vite preview"
   },
   "keywords": [
