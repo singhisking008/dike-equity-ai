@@ -9,6 +9,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+console.log('Starting server...');
+
 // Middleware
 app.use(cors({
   origin: ['https://dike-equity-ai.onrender.com', 'http://localhost:3000', 'http://localhost:5173'],
@@ -16,10 +18,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Simple test route
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+});
+
 // API Routes - inline handlers to avoid import issues
 app.post('/api/analyze', async (req, res) => {
+  console.log('POST /api/analyze called');
   try {
     const { assignmentText, courseType, studentProfile } = req.body;
+    console.log('Request body:', { assignmentText: assignmentText?.substring(0, 100), courseType, studentProfile });
 
     // Validate required fields
     if (!assignmentText || !courseType) {
@@ -28,6 +37,8 @@ app.post('/api/analyze', async (req, res) => {
 
     // Get API key from environment
     const apiKey = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY;
+    console.log('API key exists:', !!apiKey);
+    
     if (!apiKey) {
       return res.status(500).json({ error: 'API key not configured' });
     }
@@ -118,6 +129,7 @@ app.post('/api/analyze', async (req, res) => {
       };
     }
     
+    console.log('Sending response');
     res.json(analysisData);
 
   } catch (error) {
@@ -145,4 +157,6 @@ app.get('*', (req, res) => {
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
+  console.log(`API Key exists: ${!!(process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY)}`);
 });
