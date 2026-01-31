@@ -24,8 +24,15 @@ const handler = async (event, context) => {
   }
 
   try {
-    // Parse request body
-    const { assignmentText, courseType, studentProfile } = JSON.parse(event.body);
+    // Parse request body - handle both string and already parsed body
+    let requestBody;
+    if (typeof event.body === 'string') {
+      requestBody = JSON.parse(event.body);
+    } else {
+      requestBody = event.body;
+    }
+    
+    const { assignmentText, courseType, studentProfile } = requestBody;
 
     // Validate required fields
     if (!assignmentText || !courseType) {
