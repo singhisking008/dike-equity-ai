@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +13,13 @@ const PORT = process.env.PORT || 3001;
 console.log('Starting server...');
 
 // Middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: { error: 'Too many requests, please try again later.' }
+});
+
+app.use(limiter);
 app.use(cors({
   origin: ['https://dike-equity-ai.onrender.com', 'http://localhost:3000', 'http://localhost:5173'],
   credentials: true
