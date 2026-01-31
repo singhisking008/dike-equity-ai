@@ -225,7 +225,7 @@ const analyzeAssignment = async () => {
 
     try {
       // API CONFIGURATION Intelligent endpoint resolution
-      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
       const response = await fetch(`${apiUrl}/api/analyze`, {
         method: 'POST',
         headers: {
