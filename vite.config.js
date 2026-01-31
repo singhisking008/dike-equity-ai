@@ -5,5 +5,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist'
+  },
+  preview: {
+    allowedHosts: ['dike-equity-ai.onrender.com']
   }
 })
