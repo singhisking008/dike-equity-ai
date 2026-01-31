@@ -8,7 +8,7 @@ export const analyzeHandler = async (req, res) => {
     }
 
     // Get API key from environment
-    const apiKey = process.env.VITE_OPENROUTER_API_KEY;
+    const apiKey = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: 'API key not configured' });
     }
