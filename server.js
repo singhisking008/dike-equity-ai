@@ -60,7 +60,7 @@ app.post('/api/analyze', async (req, res) => {
         'X-Title': 'DIKE AI Educational Equity Analyzer'
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3-haiku',
+        model: 'google/gemma-2-9b-it',
         messages: [
           {
             role: 'system',
@@ -95,6 +95,25 @@ app.post('/api/analyze', async (req, res) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.log('OpenRouter error response:', errorText);
+      
+      // Check if it's a rate limit error
+      if (response.status === 429) {
+        console.log('Rate limit hit, returning fallback response');
+        const fallbackResponse = {
+          overallScore: 70,
+          summary: 'API is currently rate-limited. Please try again later for a detailed analysis.',
+          dimensions: [
+            { name: 'Socioeconomic', score: 70, issues: ['API rate limited'], recommendations: ['Consider resource requirements'] },
+            { name: 'Time & Scheduling', score: 70, issues: ['API rate limited'], recommendations: ['Consider time flexibility'] },
+            { name: 'Cultural & Linguistic', score: 70, issues: ['API rate limited'], recommendations: ['Consider diverse perspectives'] },
+            { name: 'Accessibility', score: 70, issues: ['API rate limited'], recommendations: ['Consider accommodations'] },
+            { name: 'Digital Divide', score: 70, issues: ['API rate limited'], recommendations: ['Consider tech access'] },
+            { name: 'Learning Support', score: 70, issues: ['API rate limited'], recommendations: ['Consider guidance'] }
+          ]
+        };
+        return res.json(fallbackResponse);
+      }
+      
       throw new Error(`API request failed: ${response.status} - ${errorText}`);
     }
 
