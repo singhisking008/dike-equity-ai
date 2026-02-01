@@ -32,17 +32,21 @@ app.post('/api/analyze', async (req, res) => {
 
     // Validate required fields
     if (!assignmentText || !courseType) {
+      console.log('Missing required fields');
       return res.status(400).json({ error: 'Missing required fields: assignmentText, courseType' });
     }
 
     // Get API key from environment
     const apiKey = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY;
     console.log('API key exists:', !!apiKey);
+    console.log('API key length:', apiKey?.length || 0);
     
     if (!apiKey) {
+      console.log('No API key found');
       return res.status(500).json({ error: 'API key not configured' });
     }
 
+    console.log('Making OpenRouter API call...');
     // Call OpenRouter API
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -82,14 +86,21 @@ app.post('/api/analyze', async (req, res) => {
       })
     });
 
+    console.log('OpenRouter response status:', response.status);
+    console.log('OpenRouter response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+      const errorText = await response.text();
+      console.log('OpenRouter error response:', errorText);
+      throw new Error(`API request failed: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('OpenRouter success, got data');
     
     // Extract the AI response content
     const aiResponse = data.choices[0].message.content;
+    console.log('AI response length:', aiResponse?.length || 0);
     
     // Try to extract JSON from the response
     let jsonMatch = aiResponse.match(/```json\n?([\s\S]*?)\n?```/) || aiResponse.match(/```\n?([\s\S]*?)\n?```/);
@@ -98,7 +109,9 @@ app.post('/api/analyze', async (req, res) => {
     if (jsonMatch) {
       try {
         analysisData = JSON.parse(jsonMatch[1]);
+        console.log('Successfully parsed JSON from AI response');
       } catch (e) {
+        console.log('JSON parsing failed, using fallback structure');
         // If JSON parsing fails, create a structured response from the text
         analysisData = {
           overallScore: 75,
@@ -114,6 +127,7 @@ app.post('/api/analyze', async (req, res) => {
         };
       }
     } else {
+      console.log('No JSON found in AI response, using fallback structure');
       // Create a structured response from plain text
       analysisData = {
         overallScore: 75,
@@ -129,12 +143,13 @@ app.post('/api/analyze', async (req, res) => {
       };
     }
     
-    console.log('Sending response');
+    console.log('Sending response to client');
     res.json(analysisData);
 
   } catch (error) {
     console.error('Function error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
