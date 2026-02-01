@@ -246,13 +246,20 @@ const analyzeAssignment = async () => {
       }
       
       const data = await response.json();
-      const content = data.choices[0].message.content;
       
+      // Check if data is already parsed (from our server) or needs parsing (from OpenRouter)
       let parsedAnalysis;
-      try {
-        // ADVANCED PARSING STRATEGIES - Robust AI Response Handling
-        // Multiple fallback strategies ensure compatibility with different AI model responses
-        let jsonText = content;
+      if (data.overallScore && (data.barriers || data.dimensions)) {
+        // Data is already parsed from our server
+        parsedAnalysis = data;
+      } else if (data.choices && data.choices[0] && data.choices[0].message) {
+        // Data is from OpenRouter, needs parsing
+        const content = data.choices[0].message.content;
+        
+        try {
+          // ADVANCED PARSING STRATEGIES - Robust AI Response Handling
+          // Multiple fallback strategies ensure compatibility with different AI model responses
+          let jsonText = content;
         
         // Strategy 1: Extract JSON from code blocks (most reliable)
         const jsonMatch = content.match(/```json\n?([\s\S]*?)\n?```/);
@@ -279,13 +286,17 @@ const analyzeAssignment = async () => {
           throw new Error('Invalid analysis structure - missing required fields');
         }
         
-      } catch (parseError) {
-        // PARSING ERROR HANDLING - User-friendly feedback
-        console.error('AI Response Parsing Error:', parseError);
-        setError('Failed to process AI response. The service may be temporarily unavailable. Please try again.');
-        setAnalysis(null);
-        setLoading(false);
-        return;
+        } catch (parseError) {
+          // PARSING ERROR HANDLING - User-friendly feedback
+          console.error('AI Response Parsing Error:', parseError);
+          setError('Failed to process AI response. The service may be temporarily unavailable. Please try again.');
+          setAnalysis(null);
+          setLoading(false);
+          return;
+        }
+      } else {
+        // Neither format is recognized
+        throw new Error('Invalid API response format');
       }
       
       // SUCCESS - Update application state with analysis results
@@ -577,7 +588,8 @@ Answer follow-up questions about barriers, suggest improvements, and provide res
       });
 
       const data = await response.json();
-      const aiMessage = { role: 'assistant', content: data.choices[0].message.content };
+      const content = data.choices ? data.choices[0].message.content : data.content || 'Response received';
+      const aiMessage = { role: 'assistant', content };
       setChatMessages([...chatMessages, userMessage, aiMessage]);
     } catch (err) {
       setChatMessages([...chatMessages, userMessage, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
@@ -612,7 +624,7 @@ Answer follow-up questions about barriers, suggest improvements, and provide res
       });
 
       const data = await response.json();
-      const content = data.choices[0].message.content;
+      const content = data.choices ? data.choices[0].message.content : data.content || '{}';
       const jsonMatch = content.match(/```json\n?([\s\S]*?)\n?```/) || content.match(/```\n?([\s\S]*?)\n?```/);
       const parsed = JSON.parse(jsonMatch ? jsonMatch[1] : content);
       setAlternatives(parsed.alternatives);
