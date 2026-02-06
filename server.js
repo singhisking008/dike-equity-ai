@@ -100,7 +100,7 @@ Return ONLY valid JSON in this exact format:
 Return ONLY the JSON, no other text.`;
 
     const requestBody = {
-      model: 'meta-llama/llama-3.3-70b-instruct:free',
+      model: 'nvidia/nemotron-3-nano-30b-a3b:free',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
